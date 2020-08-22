@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Angband list scores.
+# usage: angls [scoresdir]
+
+# requires patched angband with '-c' option to list scores to stdout
+ang=~/src/angband/src/angband
+
+# scores dir
+scoresd=~/Documents/Angband/scores
+
+"$ang" -dscores="${1:-$scoresd}" -c
+
+exit

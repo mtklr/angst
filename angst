@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# Angband score tab.
+# requires patched angband with '-c' option to list scores to stdout
+# formatted output: angst | column -s$'\t' -t
+
+# "strict mode"
+set -eu -o pipefail
+
+readonly me=${0##*/}
+
+usage () {
+	cat <<EOF >&2
+usage: $me [-pr] [-d dir]
+Angband score tab.
+
+options:
+  -d DIR  score directory is DIR
+  -h      display this help and exit
+  -p      print header
+  -r      raw output, no tabulation
+EOF
+}
+
+# options
+printheader=0
+raw=0
+scoresd=~/Documents/Angband/scores
+
+while getopts ":d:hpr" opt; do
+	case $opt in
+		d ) scoresd="$OPTARG" ;;
+		h ) usage; exit 0 ;;
+		p ) printheader=1 ;;
+		r ) raw=1 ;;
+		? ) usage; exit 1 ;;
+	esac
+done
+
+shift $((OPTIND - 1))
+
+# patched angband with '-c' option to list scores to stdout
+ang=~/src/angband/src/angband
+
+# check for bin, dir
+[ -x "$ang" ] || exit 1
+[ -d "$scoresd" ] || exit 1
+
+if [ "$raw" -eq 1 ]; then
+	"$ang" -dscores="$scoresd" -c
+	exit
+fi
+
+if [ "$printheader" -eq 1 ]; then
+	header="# rank	score	name	species	class	lvl/max	killer	dlvl/max	uid	date	gold	turn"
+
+	echo "$header"
+fi
+
+"$ang" -dscores="$scoresd" -c |\
+sed 's/\. /:/;
+s/\([0-9]\)  /\1:/;
+/Killed by /!{s/ the \([^ ]*\) /:\1:/;};
+/^[^ ]/{s/  /: /g;};
+s/Killed by//;
+s/User /:/;
+s/, Date /:/;
+s/, Gold /:/;
+s/, Turn/:/;
+s/, level /:/;
+s/on dungeon level/:/;
+/./{s/$/:/;};
+s/(Max/:max/;
+s/ *: */:/g;
+s/::*/:/g;
+s/(:/:/;s/)\.//;
+s/^  *//' |\
+awk 'BEGIN { FS = "\n"; RS="" } { print $1 $2 $3 }' |\
+sed 's/::*/:/g;
+s/\([0-9]\)):/\1:/g;
+s/^[: ]//;
+s/:max /\//g;
+s/:$//;
+s/:/	/g'
+
+exit
