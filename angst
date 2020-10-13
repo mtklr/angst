@@ -68,6 +68,7 @@ s/, Gold /:/;
 s/, Turn/:/;
 s/, level /:/;
 s/on dungeon level/:/;
+s/in the town/:0/;
 /./{s/$/:/;};
 s/(Max/:max/;
 s/ *: */:/g;
