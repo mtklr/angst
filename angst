@@ -51,7 +51,7 @@ if [ "$raw" -eq 1 ]; then
 fi
 
 if [ "$printheader" -eq 1 ]; then
-	header="# rank	score	name	species	class	lvl/max	killer	dlvl/max	uid	date	gold	turn"
+	header="# rank	score	name	race	class	lvl/max	killer	dlvl/max	uid	date	gold	turn"
 
 	echo "$header"
 fi

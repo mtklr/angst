@@ -7,7 +7,7 @@
 ```
 $ angst -p | column -s$'\t' -t | head -n6
 
-# rank  score    name        species   class    lev/max  killer                   dlev/max  uid  date        gold    turn
+# rank  score    name        race   class    lev/max  killer                   dlev/max  uid  date        gold    turn
 1       1301330  Helmut III  High-Elf  Warrior  39       Ungoliant, the Unlight   35        0    2020-07-16  413394  1223621
 2       1243654  Helmut V    High-Elf  Warrior  38/39    a mature green dragon    48        0    2020-07-28  116297  691838
 3       1177176  Helmut VII  Dwarf     Warrior  39       a dracolich              55        0    2020-08-10  211225  615490
